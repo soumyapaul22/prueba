@@ -13,5 +13,7 @@
 
   "spark-submit --deploy-mode client --jars s3://emr-spark-dependencies/postgresql-42.2.11.jar --py-files s3://data-prueba-tecnica/prueba_lib.py s3://data-prueba-tecnica/pruebaMain.py data-prueba-tecnica data_prueba_tecnica.csv"
   
+  NOTE: data-prueba-tecnica is s3 bucket(please change with corresponding s3 bucket of your account)
+  data_prueba_tecnica.csv is the input file name.
   
   
