@@ -10,23 +10,23 @@ def fileRead(spark,folder_name,file_name):
     return (df2)
 
 def filterQualityRow(spark,df2,batch_id):
-    df2_final = df2.where(col("id").isNotNull() & col("company_id").isNotNull() & col("amount").isNotNull() & col("status").isNotNull() & col("created_at").isNotNull()).where("amount_len < 20").withColumn("Batch_Id",lit(batch_id))
-    df2_final = df2_final.withColumnRenamed("paid_at", "updated_at").withColumnRenamed("name","company_name").withColumn("Batch_Id", lit(batch_id))
-    df2_final = df2_final.select('id', 'company_name', 'company_id', 'amount', 'status', 'created_at', 'updated_at','Batch_Id')
+    df2_final = df2.where(col("id").isNotNull() & col("company_id").isNotNull() & col("amount").isNotNull() & col("status").isNotNull() & col("created_at").isNotNull()).where("amount_len < 20").withColumn("batch_id",lit(batch_id))
+    df2_final = df2_final.withColumnRenamed("paid_at", "updated_at").withColumnRenamed("name","company_name").withColumn("batch_id", lit(batch_id))
+    df2_final = df2_final.select('id', 'company_name', 'company_id', 'amount', 'status', 'created_at', 'updated_at','batch_id')
     return (df2_final)
 
 def rejectedRow(spark,df2,batch_id):
     df2_rejected = df2.where(col("id").isNull() | col("company_id").isNull() | col("amount").isNull() | col("status").isNull() | col("created_at").isNull() | (col("amount_len") > 19))
-    df2_rejected = df2_rejected.withColumnRenamed("paid_at", "updated_at").withColumnRenamed("name", "company_name").withColumn("Batch_Id", lit(batch_id))
-    df2_rejected = df2_rejected.select('id', 'company_name', 'company_id', 'amount', 'status', 'created_at','updated_at', 'Batch_Id')
+    df2_rejected = df2_rejected.withColumnRenamed("paid_at", "updated_at").withColumnRenamed("name", "company_name").withColumn("batch_id", lit(batch_id))
+    df2_rejected = df2_rejected.select('id', 'company_name', 'company_id', 'amount', 'status', 'created_at','updated_at', 'batch_id')
     return (df2_rejected)
 
 def getTransaction(spark,df2_final,batch_id):
-    df2_transaction = df2_final.select('id', 'company_id', 'amount', 'status', 'created_at', 'updated_at', 'Batch_Id').where("Batch_Id == batch_id")
+    df2_transaction = df2_final.select('id', 'company_id', 'amount', 'status', 'created_at', 'updated_at', 'batch_id').where("batch_id == batch_id")
     return (df2_transaction)
 
 def getCompany(spark,df2_final,batch_id):
-    df2_company = df2_final.select("company_name", "company_id","Batch_Id").where("Batch_Id == batch_id").distinct()
+    df2_company = df2_final.select("company_name", "company_id","batch_id").where("batch_id == batch_id").distinct()
     return (df2_company)
 
 def getDataLoaded(spark,df,type):
