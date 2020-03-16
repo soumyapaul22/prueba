@@ -29,7 +29,7 @@ def getCompany(spark,df2_final,batch_id):
     df2_company = df2_final.select("company_name", "company_id","batch_id").where("batch_id == batch_id").distinct()
     return (df2_company)
 
-def getDataLoaded(spark,df,type):
+def getDataLoaded(spark,df,folder_name,type):
     aws_endpoint = "pruebatech.cncj1ormdfie.us-east-1.rds.amazonaws.com"
     port = "5432"
     db_name = "testdb"
@@ -38,15 +38,14 @@ def getDataLoaded(spark,df,type):
     pgurl = "jdbc:postgresql://{a}:{b}/{c}?user={d}&password={e}".format(a=aws_endpoint, b=port, c=db_name, d=user, e=password)
     properties = {"user": user, "password": password, "driver": "org.postgresql.Driver", "mode": "append"}
     if type == "main":
-        df.write.jdbc(url=pgurl, table="main_table", mode='append', properties=properties)
-        print ("main table has been loaded with row count of {}".format(df.count()))
+        table_name = "main_table"
     elif type == "rejected":
-        df.write.jdbc(url=pgurl, table="test_table_rejected", mode='append', properties=properties)
-        print("Reject table has been loaded with row count of {}".format(df.count()))
+        table_name = "test_table_rejected"
     elif type == "company":
-        df.write.jdbc(url=pgurl, table="company_table", mode='append', properties=properties)
-        print("Company table has been loaded with row count of {}".format(df.count()))
+        table_name = "company_table"
     elif type == "transaction":
-        df.write.jdbc(url=pgurl, table="transaction_table", mode='append', properties=properties)
-        print("Transaction table has been loaded with row count of {}".format(df.count()))
-        
+        table_name = "transaction_table"
+    df.write.jdbc(url=pgurl, table=table_name, mode='append', properties=properties)
+    table_path="s3n://{}/{}/".format(folder_name, table_name)
+    df.write.mode("Append").option("partitionOverwriteMode", "dynamic").partitionBy("batch_id").parquet(table_path)
+    print("{a} has been loaded with row count of {b} and file kept in folder {c}".format(a=table_name, b=df.count(),c=table_path))

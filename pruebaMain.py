@@ -17,14 +17,14 @@ if __name__ == '__main__':
     df2 = fileRead(spark,folder_name,file_name)
     #Main table load
     df2_final = filterQualityRow(spark, df2, batch_id)
-    getDataLoaded(spark, df=df2_final, type="main")
+    getDataLoaded(spark, df=df2_final, folder_name=folder_name, type="main")
     #Reject table load
     df2_rejected = rejectedRow(spark,df2,batch_id)
-    getDataLoaded(spark, df=df2_rejected, type="rejected")
+    getDataLoaded(spark, df=df2_rejected, folder_name=folder_name, type="rejected")
     #Transaction table load
     df2_transaction = getTransaction(spark,df2_final,batch_id)
-    getDataLoaded(spark, df=df2_transaction, type="transaction")
+    getDataLoaded(spark, df=df2_transaction, folder_name=folder_name, type="transaction")
     #Company table load
     df2_company = getCompany(spark, df2_final,batch_id)
-    getDataLoaded(spark, df=df2_company, type="company")
+    getDataLoaded(spark, df=df2_company, folder_name=folder_name, type="company")
     spark.stop()
