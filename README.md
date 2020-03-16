@@ -10,7 +10,8 @@
   getDataLoaded :: To load the data in PostgraseSql table, in append Mode.
 
 4. Sample Spark Submit Command is as,
-  spark-submit --deploy-mode client --jars s3://emr-spark-dependencies/postgresql-42.2.11.jar --py-files s3://data-prueba-tecnica/prueba_lib.py s3://data-prueba-tecnica/pruebaMain.py data-prueba-tecnica data_prueba_tecnica.csv
+
+  "spark-submit --deploy-mode client --jars s3://emr-spark-dependencies/postgresql-42.2.11.jar --py-files s3://data-prueba-tecnica/prueba_lib.py s3://data-prueba-tecnica/pruebaMain.py data-prueba-tecnica data_prueba_tecnica.csv"
   
   
   
