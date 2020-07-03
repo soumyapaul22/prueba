@@ -33,8 +33,8 @@ def getDataLoaded(spark,df,folder_name,type):
     aws_endpoint = "pruebatech.cncj1ormdfie.us-east-1.rds.amazonaws.com"
     port = "5432"
     db_name = "testdb"
-    user = "soumyapaul22"
-    password = "soumyapaul22"
+    user = "******"
+    password = "*****"
     pgurl = "jdbc:postgresql://{a}:{b}/{c}?user={d}&password={e}".format(a=aws_endpoint, b=port, c=db_name, d=user, e=password)
     properties = {"user": user, "password": password, "driver": "org.postgresql.Driver", "mode": "append"}
     if type == "main":
